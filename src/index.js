@@ -1,7 +1,9 @@
 import {createSidebar, createMainContent, createModal} from "./page.js";
-import {addProjectListener} from './listeners.js';
+import {addListeners} from "./listeners.js";
 
 createSidebar();
 createMainContent();
 createModal();
-addProjectListener();
+//Add after all DOM elements have been created
+addListeners();
+

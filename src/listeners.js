@@ -1,9 +1,10 @@
-import {addProjectButton} from './page.js'
+import {addProjectButton, modalContainer} from './page.js'
 
-function addProjectListener(){
+
+function addListeners(){
     addProjectButton.addEventListener("click", () => {
-        alert("Works");
+        modalContainer.style.display = "block";
     });
 }
 
-export {addProjectListener}
+export {addListeners}

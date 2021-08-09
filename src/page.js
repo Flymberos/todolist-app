@@ -1,5 +1,12 @@
+import {addListeners} from './listeners.js';
+
 let content = document.querySelector("#content");
 let modalContainer;
+
+//Buttons for export
+let addProjectButton;
+let closeFormButton;
+let submitFormButton;
 
 function createSidebar(){
 
@@ -13,7 +20,7 @@ function createSidebar(){
     let projectsContainer = document.createElement("div");
     projectsContainer.classList.add("projects-container");
 
-    let addProjectButton = document.createElement("button");
+    addProjectButton = document.createElement("button");
     addProjectButton.textContent = "+ Add Project";
     projectsContainer.appendChild(addProjectButton);
 
@@ -31,22 +38,44 @@ function createMainContent(){
 function createModal(){
     modalContainer = document.createElement("div");
     modalContainer.classList.add("modal-container");
-
-    content.appendChild(modalContainer);
+    modalContainer.style.display = "none";
 
     let form = document.createElement("form");
+    form.classList.add("modal-form");
     let titleInputForm = document.createElement("input");
     let descInputForm = document.createElement("input");
+
+    let formButtonContainer = document.createElement("div");
+    let submitFormButton = document.createElement("button");
+    let closeFormButton = document.createElement("button");
+
+    submitFormButton.classList.add("form-submit-button");
+    closeFormButton.classList.add("form-cancel-button");
 
     titleInputForm.required = true;
     titleInputForm.placeholder = "Enter the title for the project"
     descInputForm.required = true;
+    descInputForm.placeholder = "Description of the project"
+    submitFormButton.textContent = "Add";
+    closeFormButton.textContent = "Cancel";
 
-    
+    formButtonContainer.appendChild(submitFormButton);
+    formButtonContainer.appendChild(closeFormButton);
+
+    form.appendChild(titleInputForm);
+    form.appendChild(descInputForm);
+    form.appendChild(formButtonContainer);
+
+    modalContainer.appendChild(form);    
+    content.appendChild(modalContainer);
+
 }
 
 export {createSidebar, 
         createMainContent, 
         createModal, 
-        addProjectButton
-        };
+        addProjectButton,
+        submitFormButton,
+        closeFormButton,
+        modalContainer
+        }
