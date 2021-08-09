@@ -46,8 +46,8 @@ function createModal(){
     let descInputForm = document.createElement("input");
 
     let formButtonContainer = document.createElement("div");
-    let submitFormButton = document.createElement("button");
-    let closeFormButton = document.createElement("button");
+    submitFormButton = document.createElement("button");
+    closeFormButton = document.createElement("button");
 
     submitFormButton.classList.add("form-submit-button");
     closeFormButton.classList.add("form-cancel-button");
