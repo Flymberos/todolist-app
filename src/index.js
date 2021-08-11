@@ -4,6 +4,6 @@ import {addListeners} from "./listeners.js";
 createSidebar();
 createMainContent();
 createModal();
-//Add after all DOM elements have been created
+//Add listeners after all DOM elements have been created
 addListeners();
 

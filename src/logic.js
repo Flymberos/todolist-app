@@ -1,6 +1,8 @@
+let projects = [];
+
 class Todo{
 
-    constructor(title, description, dueDate){
+    constructor(title, dueDate){
         this.title = title;
         this.dueDate = dueDate;
     }
@@ -20,3 +22,10 @@ class Project{
     }
 
 }
+
+function createNewProject(title, description){
+    projects.push(new Project(title, description));
+    console.log(projects);
+}
+
+export {createNewProject, projects}
