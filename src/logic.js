@@ -28,4 +28,4 @@ function createNewProject(title, description){
     console.log(projects);
 }
 
-export {createNewProject, projects}
+export {createNewProject, projects, Todo}

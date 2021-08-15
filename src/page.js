@@ -1,7 +1,10 @@
-import {projects} from './logic.js';
+import {projects, Todo} from './logic.js';
 import {openProjectListener, deleteProjectListener,
      editProjectListener, editFormCancelButtonListener,
-      editFormSaveButtonListener} from './listeners.js'
+      editFormSaveButtonListener, addTodoListener,
+        todoFormCancelListener, todoFormAddListener} from './listeners.js';
+import { differenceInMinutes, formatDistance, subDays } from 'date-fns'
+import { differenceInHours } from 'date-fns/esm';
 
 let content = document.querySelector("#content");
 
@@ -11,6 +14,8 @@ let projectsContainer;
 let mainPage;
 let mainPageTitleWrapper;
 let editFormDiv;
+let todoContainer;
+let todoFormContainer;
 
 //Global buttons
 
@@ -18,6 +23,7 @@ let editFormDiv;
 let addProjectButton;
 let closeFormButton;
 let submitFormButton;
+let addTodoButton;
 
 //Input for export
 let titleInputForm;
@@ -101,7 +107,6 @@ function clearModalInput(){
 }
 
 function showProjects(){
-
     for(let i=projectsContainer.childNodes.length - 1; i<projects.length; i++){
         let projectContainer = document.createElement("div");
         projectContainer.classList.add("project-container");
@@ -111,7 +116,6 @@ function showProjects(){
         projectsContainer.prepend(projectContainer);
         openProjectListener(projectContainer, i);
     }
-
 }
 
 function openProject(project, index){
@@ -142,10 +146,94 @@ function openProject(project, index){
 
     let seperator = document.createElement("hr");
 
+    //Append all the elemnts
     mainPageTitleWrapper.appendChild(titleContainer);
     mainPageTitleWrapper.appendChild(subtitle);
     mainPage.appendChild(mainPageTitleWrapper);
     mainPage.appendChild(seperator);
+    showTodos(project, index);
+}
+
+function showTodos(project, index){
+
+    todoContainer = document.createElement("div");
+    todoContainer.classList.add("todo-container");
+
+    addTodoButton = document.createElement("button");
+    addTodoButton.classList.add("add-todo-button");
+    addTodoButton.textContent = "+ Add Todo";
+
+    todoContainer.appendChild(addTodoButton);
+    mainPage.appendChild(todoContainer);
+
+    for(let i=0; i<project.todos.length; i++){
+        createTodo(project.todos[i].title, project.todos[i].dueDate);
+    }
+
+    addTodoListener(addTodoButton, project)
+}
+
+function addTodoForm(project){
+    addTodoButton.style.display = "none";
+
+    todoFormContainer = document.createElement("div");
+    let todoName = document.createElement("input");
+    let dueDate = document.createElement("input");
+    let cancelButton = document.createElement("button");
+    let addButton = document.createElement("button");
+    cancelButton.textContent = "Cancel";
+    addButton.textContent = "Add";
+    dueDate.type = "date";
+
+    todoFormCancelListener(cancelButton);
+    todoFormAddListener(addButton, todoName, dueDate, project);
+
+    todoFormContainer.appendChild(todoName);
+    todoFormContainer.appendChild(dueDate);
+    todoFormContainer.appendChild(addButton);
+    todoFormContainer.appendChild(cancelButton);
+
+    todoContainer.appendChild(todoFormContainer);
+}
+
+function showTodoAddButton(){
+    addTodoButton.style.display = "block";
+    todoFormContainer.style.display = "none";
+}
+
+function addTodo(name, date, project){
+    project.addTodo(new Todo(name, date));
+    todoFormContainer.style.display = "none";
+    addTodoButton.style.display = "block";
+    
+    createTodo(name, date, project);
+}
+
+function createTodo(name, date){
+    let singleTodoContainer = document.createElement("div");
+    singleTodoContainer.classList.add("single-todo-container");
+    let checkBox = document.createElement("input")
+    checkBox.type = "checkbox";
+    let todoName = document.createElement("p");
+    let todoHoursLeft = document.createElement("p");
+
+    let deleteIcon = document.createElement("img");
+    let editIcon = document.createElement("img");
+    deleteIcon.src = "../dist/img/bin.png";
+    editIcon.src = "../dist/img/edit.png";
+
+    let hoursLeft = differenceInHours(new Date(date), new Date());
+    hoursLeft = (hoursLeft < 0) ? 0 : hoursLeft;
+
+    todoName.textContent = name;
+    todoHoursLeft.textContent = hoursLeft + " hours left";
+
+    singleTodoContainer.appendChild(checkBox);
+    singleTodoContainer.appendChild(todoName);
+    singleTodoContainer.appendChild(todoHoursLeft);
+    singleTodoContainer.appendChild(deleteIcon);
+    singleTodoContainer.appendChild(editIcon);
+    todoContainer.prepend(singleTodoContainer);
 }
 
 function deleteProject(index){
@@ -154,7 +242,6 @@ function deleteProject(index){
 }
 
 function editProject(index){
-    let htmlContents = mainPageTitleWrapper.innerHTML;
     mainPageTitleWrapper.style.display = "none";
 
     editFormDiv = document.createElement("div");
@@ -167,10 +254,9 @@ function editProject(index){
 
     saveButton.textContent = "Save";
     cancelButton.textContent = "Cancel";
-    editTitle.placeholder = "Enter new title";
-    editDesc.placeholder = "Enter new subtitle";
 
-    editFormCancelButtonListener(cancelButton, htmlContents);
+    editFormCancelButtonListener(cancelButton);
+    editFormSaveButtonListener(saveButton, editTitle, editDesc, index);
 
     buttonContainer.appendChild(saveButton);
     buttonContainer.appendChild(cancelButton);
@@ -182,9 +268,25 @@ function editProject(index){
     mainPage.prepend(editFormDiv);
 }
 
-function cancelEdit(htmlContents){
+function cancelEdit(){
     editFormDiv.innerHTML = "";
     mainPageTitleWrapper.style.display = "block";
+}
+
+function saveEdit(title, desc, index){
+  
+   let temp = projectsContainer.childNodes.length - 2;
+
+   let project = projects[index];
+   project.title = title;
+   project.description = desc;
+
+   editFormDiv.innerHTML = "";
+   mainPageTitleWrapper.style.display = "block"; 
+
+   projectsContainer.childNodes[temp - index].querySelector("p").textContent = project.title;
+ 
+   openProject(project, index);
 }
 
 export {createSidebar,
@@ -204,5 +306,9 @@ export {createSidebar,
         openProject,
         deleteProject,
         editProject,
-        cancelEdit
+        cancelEdit,
+        saveEdit,
+        addTodoForm,
+        showTodoAddButton,
+        addTodo
         }

@@ -1,7 +1,8 @@
 import {addProjectButton, closeFormButton,
     submitFormButton,titleInputForm,descInputForm, openModal,
      closeModal, clearModalInput, showProjects, openProject,
-    deleteProject, editProject, cancelEdit} from './page.js';
+    deleteProject, editProject, cancelEdit, saveEdit, addTodoForm,
+    showTodoAddButton, addTodo} from './page.js';
 import {createNewProject, projects} from './logic.js';
 
 function addListeners(){
@@ -38,7 +39,6 @@ function openProjectListener(container, index){
 
 function deleteProjectListener(deleteIcon, index){
     deleteIcon.addEventListener("click", () => {
-        console.log(projects);
         projects.splice(index, 1);
         deleteProject(index);
     })
@@ -50,16 +50,42 @@ function editProjectListener(editIcon,index){
     })
 }
 
-function editFormCancelButtonListener(cancelButton, htmlContents){
+function editFormCancelButtonListener(cancelButton){
 
     cancelButton.addEventListener("click", () => {;
-        cancelEdit(htmlContents);
+        cancelEdit();
     })
 
 }
 
-function editFormSaveButtonListener(){
+function editFormSaveButtonListener(saveButton, title, desc, index){
 
+    saveButton.addEventListener("click", () => {
+
+        if(title.value.trim() !== "" && desc.value.trim() !== ""){
+            saveEdit(title.value, desc.value, index);
+        }
+    });
+}
+
+function addTodoListener(button, project){
+    button.addEventListener("click", () => {
+        addTodoForm(project)
+    })
+}
+
+function todoFormAddListener(button, name, date, project){
+    button.addEventListener("click", () => {
+        if(name.value.trim() !== ""){
+            addTodo(name.value, date.value, project);
+        }
+    });
+}
+
+function todoFormCancelListener(button){
+    button.addEventListener("click", () => {
+        showTodoAddButton();
+    });
 }
 
 export {addListeners,
@@ -67,4 +93,7 @@ export {addListeners,
       deleteProjectListener,
        editProjectListener,
         editFormCancelButtonListener,
-        editFormSaveButtonListener}
+        editFormSaveButtonListener,
+        addTodoListener,
+        todoFormAddListener,
+        todoFormCancelListener}

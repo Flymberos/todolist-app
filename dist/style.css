@@ -29,7 +29,7 @@ html, body {
   }
 
 .main-page {
-    width: auto;
+    overflow: auto;
     height: 100%;
     background-color: #AFEADC;
 }
@@ -174,9 +174,9 @@ html, body {
 }
 
 .main-page > hr {
-    width: 75%;
     border-color: black;
     margin: 25px auto;
+
 }
 
 .main-page-edit-form {
@@ -205,4 +205,41 @@ html, body {
     transform: scale(1.1);
 }
 
+.single-todo-container {
+    display: inline;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: 1px solid black;
+}
 
+.single-todo-container > p {
+    margin-right: 20px;
+}
+
+.single-todo-container > img:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.add-todo-button {
+    margin: 0 auto;
+    border: none;
+    color: black;
+    outline: none;
+    padding: 10px 20px 10px 20px;
+    background: none;
+    font-size: 1em;
+}
+
+.add-todo-button:hover {
+    background-color: rgba(255, 255, 255, 0.5)
+}
+
+.todo-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
